@@ -13,7 +13,7 @@ public class Contacts {
     private String emailId;
     private String Type;
     private String Name;
-
+    private LocalDate date;
 
     public String getFirstName() {
         return firstName;
@@ -94,7 +94,9 @@ public class Contacts {
     public void setName(String Name) {
        this.Name = Name;
     }
-
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
     @Override
     public String toString() {
         return "Contacts{" +
@@ -110,5 +112,6 @@ public class Contacts {
                 ", Name='" + Name + '\'' +
                 '}';
     }
+
 
 }

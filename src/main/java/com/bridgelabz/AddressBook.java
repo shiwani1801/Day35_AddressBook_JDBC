@@ -1,13 +1,14 @@
 package com.bridgelabz;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.*;
 
 public class AddressBook {
     Connection connection;
 
     Connection getConnection() {
-        String URL_JD = "jdbc:mysql://127.0.0.1:3306/addressbook_service?useSSL=false";
+        String URL_JD = "jdbc:mysql://127.0.0.1:3306/addressbook?useSSL=false";
         String USER_NAME = "root";
         String PASSWORD = "root";
         Connection connection = null;
@@ -40,7 +41,7 @@ public class AddressBook {
                 contactInfo.setZip(resultSet.getInt("zip"));
                 contactInfo.setPhoneNo(resultSet.getString("phoneNo"));
                 contactInfo.setEmailId(resultSet.getString("email"));
-                contactInfo.setName(resultSet.getString("Name"));
+                contactInfo.setName(resultSet.getString("name"));
                 contactInfo.setType(resultSet.getString("Type"));
 
                 addressBookList.add(contactInfo);
@@ -54,7 +55,7 @@ public class AddressBook {
     public void updateCityByZip(String address, String city, String state, int zip) {
         try (Connection connection = getConnection()) {
             Statement statement = connection.createStatement();
-            String query = "Update addressBook set address=" + "'" + address + "'" + ", " + "city=" + "'" + city + "'" + ", " + "state=" + "'" + state + "'" + ", " + "zip=" + zip +"";
+            String query = "Update AddressBook set address=" + "'" + address + "'" + ", " + "city=" + "'" + city + "'" + ", " + "state=" + "'" + state + "'" + ", " + "zip=" + zip +"";
             int result = statement.executeUpdate(query);
             System.out.println(result);
             if (result > 0) {
@@ -64,4 +65,35 @@ public class AddressBook {
             e.printStackTrace();
         }
     }
+    public List<Contacts> findDataParticularDate(LocalDate date) {
+        ResultSet resultSet = null;
+        List<Contacts> addressBookList = new ArrayList<Contacts>();
+        try (Connection connection = getConnection()) {
+            Statement statement = connection.createStatement();
+            String sql = "select * from  AddressBook where dateadded between cast(' " + date + "'"
+                    + " as date)  and date(now());";
+            resultSet = statement.executeQuery(sql);
+            int count = 0;
+            while (resultSet.next()) {
+                Contacts contactInfo = new Contacts();
+                contactInfo.setFirstName(resultSet.getString("firstName"));
+                contactInfo.setLastName(resultSet.getString("lastname"));
+                contactInfo.setAddress(resultSet.getString("address"));
+                contactInfo.setCity(resultSet.getString("city"));
+                contactInfo.setState(resultSet.getString("state"));
+                contactInfo.setZip(resultSet.getInt("zip"));
+                contactInfo.setPhoneNo(resultSet.getString("PhoneNumber"));
+                contactInfo.setEmailId(resultSet.getString("email"));
+                contactInfo.setName(resultSet.getString("name"));
+                contactInfo.setType(resultSet.getString("Type"));
+                contactInfo.setDate(resultSet.getDate("date").toLocalDate());
+
+                addressBookList.add(contactInfo);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return addressBookList;
+    }
+
 }
