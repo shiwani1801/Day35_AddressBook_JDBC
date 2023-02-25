@@ -7,7 +7,7 @@ import java.util.*;
 public class AddressBook {
     Connection connection;
 
-    Connection getConnection() {
+    static Connection getConnection() {
         String URL_JD = "jdbc:mysql://127.0.0.1:3306/addressbook_service?useSSL=false";
         String USER_NAME = "root";
         String PASSWORD = "root";
@@ -122,6 +122,32 @@ public class AddressBook {
             e.printStackTrace();
         }
         return 0;
+    }
+    public static void insertData(Contacts add) throws SQLException {
+        Connection connection =getConnection();
+        try {
+            if (connection != null) {
+                connection.setAutoCommit(false);
+                Statement statement = connection.createStatement();
+                String sql = "insert into addressBook(firstname,lastname,address,city,state,zip,phoneNo,email,Name,Type,date)" +
+                        "values('" + add.getFirstName() + "','" + add.getLastName() + "','" + add.getAddress() + "','" + add.getCity() +
+                        "','" + add.getState() + "','" + add.getZip() + "','" + add.getPhoneNo() + "','" +
+                        add.getEmailId() + "','" + add.getName() + "','" + add.getType() + "','" + add.getDate() + "');";
+                int result = statement.executeUpdate(sql);
+                connection.commit();
+                if (result > 0) {
+                    System.out.println("Contact Inserted");
+                }
+                connection.setAutoCommit(true);
+            }
+        } catch (SQLException sqlException) {
+            System.out.println("Insertion Rollbacked");
+            connection.rollback();
+        } finally {
+            if (connection != null) {
+                connection.close();
+            }
+        }
     }
 
 }

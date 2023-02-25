@@ -1,12 +1,13 @@
 package com.bridgelabz;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 public class AddressBookMain {
     static Scanner scanner = new Scanner(System.in);
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         boolean exit = false;
         while (!exit) {
-            System.out.println(" Press\n 1 -> Retrieve data\n 2 -> Update City\n 3 ->Retrive particular data\n 4 -> Retrieve Count of Contacts for City or State\n 5 -> Exit");
+            System.out.println(" Press\n 1 -> Retrieve data\n 2 -> Update City\n 3 ->Retrive particular data\n 4 -> Retrieve Count of Contacts for City or State\n 5 -> Add new Contacts to AddressBook\\n 6 -> Exit");
             switch (scanner.nextInt()) {
                 case 1:
                     retrieveData();
@@ -19,7 +20,9 @@ public class AddressBookMain {
                 break;
                 case 4:retrieveCountByCityOrState();
                 break;
-                case 5:
+                case 5:addNewContact();
+                    break;
+                case 6:
                     exit = true;
             }
         }
@@ -64,6 +67,30 @@ public class AddressBookMain {
                 System.out.println("Number of Contacts is Given state= " + stateContactsCount);
                 break;
         }
+
+    }
+    private static void addNewContact() throws SQLException {
+        Contacts add = new Contacts();
+        System.out.println("Enter First Name:");
+        add.setFirstName(scanner.next());
+        System.out.println("Enter Last name:");
+        add.setLastName(scanner.next());
+        System.out.println("Enter address");
+        add.setAddress(scanner.next());
+        System.out.println("Enter city");
+        add.setCity(scanner.next());
+        System.out.println("Enter state");
+        add.setState(scanner.next());
+        System.out.println("Enter Zip");
+        add.setZip(scanner.nextInt());
+        System.out.println("Enter PhoneNumber");
+        add.setPhoneNo(scanner.next());
+        System.out.println("Enter Email");
+        add.setEmailId(scanner.next());
+        System.out.println("Enter Addressbook name");
+        add.setName(scanner.next());
+        add.setDate(LocalDate.now());
+        AddressBook.insertData(add);
 
     }
 
