@@ -8,7 +8,7 @@ public class AddressBook {
     Connection connection;
 
     Connection getConnection() {
-        String URL_JD = "jdbc:mysql://127.0.0.1:3306/addressbook?useSSL=false";
+        String URL_JD = "jdbc:mysql://127.0.0.1:3306/addressbook_service?useSSL=false";
         String USER_NAME = "root";
         String PASSWORD = "root";
         Connection connection = null;
@@ -55,7 +55,7 @@ public class AddressBook {
     public void updateCityByZip(String address, String city, String state, int zip) {
         try (Connection connection = getConnection()) {
             Statement statement = connection.createStatement();
-            String query = "Update AddressBook set address=" + "'" + address + "'" + ", " + "city=" + "'" + city + "'" + ", " + "state=" + "'" + state + "'" + ", " + "zip=" + zip +"";
+            String query = "Update addressBook set address=" + "'" + address + "'" + ", " + "city=" + "'" + city + "'" + ", " + "state=" + "'" + state + "'" + ", " + "zip=" + zip +"";
             int result = statement.executeUpdate(query);
             System.out.println(result);
             if (result > 0) {
@@ -70,7 +70,7 @@ public class AddressBook {
         List<Contacts> addressBookList = new ArrayList<Contacts>();
         try (Connection connection = getConnection()) {
             Statement statement = connection.createStatement();
-            String sql = "select * from  AddressBook where dateadded between cast(' " + date + "'"
+            String sql = "select * from  addressBook where dateadded between cast(' " + date + "'"
                     + " as date)  and date(now());";
             resultSet = statement.executeQuery(sql);
             int count = 0;
@@ -94,6 +94,34 @@ public class AddressBook {
             System.out.println(e);
         }
         return addressBookList;
+    }
+    public int countByCity(String city) {
+        try (Connection connection = getConnection()) {
+            Statement statement = connection.createStatement();
+            String sql = "select count(firstname) from addressBook where city=" + "'" + city + "';";
+            ResultSet result = statement.executeQuery(sql);
+            result.next();
+            int count = result.getInt(1);
+
+            return count;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int countByState(String state) {
+        try (Connection connection = getConnection()) {
+            Statement statement = connection.createStatement();
+            String sql = "select count(firstname) from addressBook where state=" + "'" + state + "';";
+            ResultSet result = statement.executeQuery(sql);
+            result.next();
+            int count = result.getInt(1);
+            return count;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
 }
